@@ -1585,7 +1585,7 @@ static AEGridCounter *instance = nil;
         return RectanglePortrait;
     }
     
-    if (ratio > 2.99) {
+    if (ratio >= 2.99) {
         /* NarrowRectangleAlbum
          _______________________
          |                       |
