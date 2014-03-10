@@ -9,6 +9,7 @@
 #import "AEGridCounter.h"
 
 //Создадим обьект для хранения переменных
+
 @interface AEImageObject : NSObject
 @property (nonatomic, assign) AEImageSizeObject *size;
 @property (nonatomic, assign) ShapeType type;
@@ -21,16 +22,18 @@
 @implementation AEImageSizeObject
 @end
 
-@implementation AEGridCounter
-@synthesize blockFrame;
+@implementation AEResultObject
+@end
 
+@implementation AEGridCounter
+
+//Singleton
 static AEGridCounter *instance = nil;
 + (AEGridCounter *)shared {
     @synchronized (self) {
 		if (instance == nil){
             instance = [[self alloc] init];
         }
-        instance.blockFrame = CGRectZero;
 	}
 	return instance;
 }
@@ -50,7 +53,7 @@ static AEGridCounter *instance = nil;
 
 
 //Данный метод принимает на вход массив изображений и параметры блока
--(NSMutableArray*)countGrid:(NSMutableArray*)images blockWidth:(int)blockW offset:(int)offset {
+-(AEResultObject*)countGrid:(NSMutableArray*)images blockWidth:(int)blockW offset:(int)offset {
     
     NSMutableArray *sizesArray = [[NSMutableArray alloc]init];
     
@@ -68,7 +71,8 @@ static AEGridCounter *instance = nil;
 }
 
 //Данный метод принимает на вход массив объектов AEImageSizeObject и параметры блока
--(NSMutableArray*)countGridWithSizes:(NSMutableArray *)imageSizes blockWidth:(int)blockW offset:(int)offset {
+-(AEResultObject*)countGridWithSizes:(NSMutableArray *)imageSizes blockWidth:(int)blockW offset:(int)offset {
+    blockFrame = CGRectZero;
     offsetP = offset;
     blockWidth = blockW;
     maxHeight = [UIScreen mainScreen].bounds.size.height-200;
@@ -76,7 +80,13 @@ static AEGridCounter *instance = nil;
     NSMutableArray *imageObjects = [[NSMutableArray alloc]init];
     imageObjects = [self getImageObjectsFromSizesArray:imageSizes];
     
-    return [self countGridWithImageObjects:imageObjects];
+    NSMutableArray *frames = [self countGridWithImageObjects:imageObjects];
+    
+    AEResultObject *result = [[AEResultObject alloc]init];
+    result.FramesArray = frames;
+    result.blockFrame = blockFrame;
+    
+    return result;
 }
 
 
@@ -123,6 +133,7 @@ static AEGridCounter *instance = nil;
             
             //Функция roundf() округляет float до ближайшего целого числа
             imageObject.frame = CGRectMake(0, 0, roundf(scaleFactor*w), roundf(scaleFactor*h));
+            
             blockFrame = CGRectMake(0, 0, blockWidth, blockWidth);
             
             return workingArray;
@@ -138,6 +149,7 @@ static AEGridCounter *instance = nil;
             
             //Функция roundf() округляет float до ближайшего целого числа
             imageObject.frame = CGRectMake(0, 0, roundf(nw1), roundf(nh1));
+            
             blockFrame = imageObject.frame;
             
             return workingArray;
@@ -239,12 +251,12 @@ static AEGridCounter *instance = nil;
         // 2 ситуация - 3 NRP
         if (imageObject1.type == NarrowRectanglePortrait && imageObject2.type == NarrowRectanglePortrait && imageObject3.type == NarrowRectanglePortrait) {
             
-            //Считаем scale по ширине для второго и затем присваиваем новые размеры
+            //Считаем scale по ширина для второго и затем присваиваем новые размеры
             CGFloat scaleHeight2 = h1/h2;
             w2 = scaleHeight2*w2;
             h2 = scaleHeight2*h2;
             
-            //Считаем scale по ширине для третьего и затем присваиваем новые размеры
+            //Считаем scale по ширина для третьего и затем присваиваем новые размеры
             CGFloat scaleHeight3 = h1/h3;
             w3 = scaleHeight3*w3;
             h3 = scaleHeight3*h3;

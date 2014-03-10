@@ -26,6 +26,12 @@ typedef enum {
      Square - квадрат
 */
 
+//Создадим результат
+@interface AEResultObject : NSObject
+@property (nonatomic, assign) NSMutableArray *FramesArray;
+@property (nonatomic, assign) CGRect blockFrame;
+@end
+
 //Создадим обьект для хранения переменных
 @interface AEImageSizeObject : NSObject
 @property (nonatomic, assign) CGFloat width;
@@ -39,17 +45,14 @@ typedef enum {
     CGRect blockFrame;
 }
 
-//Рамка блока
-@property (nonatomic) CGRect blockFrame;
-
 //Singleton
 + (AEGridCounter *)shared;
 
 //Return Frames Array
 
 //Данный метод принимает на вход массив изображений и параметры блока
--(NSMutableArray*)countGrid:(NSMutableArray*)images blockWidth:(int)blockW offset:(int)offset;
+-(AEResultObject*)countGrid:(NSMutableArray*)images blockWidth:(int)blockW offset:(int)offset;
 
--(NSMutableArray*)countGridWithSizes:(NSMutableArray *)imageSizes blockWidth:(int)blockW offset:(int)offset;
+-(AEResultObject*)countGridWithSizes:(NSMutableArray *)imageSizes blockWidth:(int)blockW offset:(int)offset;
 
 @end
