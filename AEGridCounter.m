@@ -32,7 +32,7 @@ static AEGridCounter *instance = nil;
 + (AEGridCounter *)shared {
     @synchronized (self) {
 		if (instance == nil){
-            instance = [[self alloc] init];
+            instance = [[self alloc]init];
         }
 	}
 	return instance;
@@ -143,12 +143,23 @@ static AEGridCounter *instance = nil;
             CGFloat nw1 = imageObject.size.width*minScale;
             CGFloat nh1 = imageObject.size.height*minScale;
             
-            //Функция roundf() округляет float до ближайшего целого числа
-            imageObject.frame = CGRectMake(0, 0, roundf(nw1), roundf(nh1));
-            
-            blockFrame = imageObject.frame;
-            
-            return workingArray;
+            if (nh1 > maxHeight) {
+                //Обрезаем до квадрата
+                
+                //Функция roundf() округляет float до ближайшего целого числа
+                imageObject.frame = CGRectMake(0, 0, roundf(nw1), roundf(nw1));
+                
+                blockFrame = imageObject.frame;
+                
+                return workingArray;
+            } else {
+                //Функция roundf() округляет float до ближайшего целого числа
+                imageObject.frame = CGRectMake(0, 0, roundf(nw1), roundf(nh1));
+                
+                blockFrame = imageObject.frame;
+                
+                return workingArray;
+            }
         }
     }
     if (workingArray.count == 2) {
