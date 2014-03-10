@@ -135,13 +135,10 @@ static AEGridCounter *instance = nil;
             return workingArray;
         } else {
             //маштабируем
-            CGFloat scaleH = maxHeight/imageObject.size.height;
             CGFloat scaleW = blockWidth/imageObject.size.width;
             
-            CGFloat minScale = MIN(scaleH, scaleW);
-            
-            CGFloat nw1 = imageObject.size.width*minScale;
-            CGFloat nh1 = imageObject.size.height*minScale;
+            CGFloat nw1 = imageObject.size.width*scaleW;
+            CGFloat nh1 = imageObject.size.height*scaleW;
             
             if (nh1 > maxHeight) {
                 //Обрезаем до квадрата
