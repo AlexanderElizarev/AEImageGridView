@@ -126,13 +126,9 @@ static AEGridCounter *instance = nil;
         
         if (imageObject.type == NarrowRectanglePortrait) {
             //обрезаем до квадрата
-            CGFloat w = imageObject.size.width;
-            CGFloat h = w;
-            
-            CGFloat scaleFactor = blockWidth/w;
             
             //Функция roundf() округляет float до ближайшего целого числа
-            imageObject.frame = CGRectMake(0, 0, roundf(scaleFactor*w), roundf(scaleFactor*h));
+            imageObject.frame = CGRectMake(0, 0, blockWidth, blockWidth);
             
             blockFrame = CGRectMake(0, 0, blockWidth, blockWidth);
             
